@@ -1,9 +1,12 @@
 package com.imooc.security.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ClassName: UserController
@@ -17,6 +20,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate ;
+
     @PostMapping
     public User create(@RequestBody User user){
 
@@ -41,8 +48,9 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> query(String name){
-
-        return new ArrayList<User>() ;
+    public List<?> query(String name){
+        String sql = "select id, name from user where name = '"+name+"'" ;
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
+        return list ;
     }
 }
