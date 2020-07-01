@@ -21,8 +21,10 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UserController {
 
+//    @Autowired
+//    private JdbcTemplate jdbcTemplate ;
     @Autowired
-    private JdbcTemplate jdbcTemplate ;
+    private UserRepository userRepository ;
 
     @PostMapping
     public User create(@RequestBody User user){
@@ -48,9 +50,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<?> query(String name){
-        String sql = "select id, name from user where name = '"+name+"'" ;
-        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
-        return list ;
+    public List<User> query(String name){
+
+        return  userRepository.findByName(name);
     }
 }
