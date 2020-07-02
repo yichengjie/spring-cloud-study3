@@ -1,5 +1,6 @@
 package com.imooc.security.user;
 
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -21,37 +22,35 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UserController {
 
-//    @Autowired
-//    private JdbcTemplate jdbcTemplate ;
     @Autowired
-    private UserRepository userRepository ;
+    private UserService userService ;
 
     @PostMapping
-    public User create(@RequestBody User user){
+    public UserInfo create(@RequestBody UserInfo user){
 
-        return user ;
+        return userService.create(user) ;
     }
 
     @PutMapping("/{id}")
-    public User update(@RequestBody User user){
+    public UserInfo update(@RequestBody UserInfo user){
 
-        return user ;
+        return userService.update(user) ;
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
-
+        userService.delete(id);
     }
 
     @GetMapping("/{id}")
-    public User get(@PathVariable Long id){
+    public UserInfo get(@PathVariable Long id){
 
-        return new User() ;
+        return userService.get(id) ;
     }
 
     @GetMapping
-    public List<User> query(String name){
+    public List<UserInfo> query(String name){
 
-        return  userRepository.findByName(name);
+        return userService.query(name) ;
     }
 }

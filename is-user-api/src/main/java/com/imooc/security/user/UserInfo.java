@@ -8,7 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * ClassName: User
+ * 封装服务请求和响应的
+ * ClassName: UserInfo
  * Description: TODO(描述)
  * Date: 2020/7/1 22:02
  *
@@ -17,10 +18,8 @@ import javax.persistence.Id;
  * @version 产品版本信息 yyyy-mm-dd 姓名(邮箱) 修改信息
  */
 @Data
-@Entity
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UserInfo {
+
     private Long id ;
 
     private String name ;
