@@ -1,6 +1,7 @@
 package com.imooc.security.user;
 
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,4 +29,10 @@ public class User {
     private String username ;
 
     private String password ;
+
+    public UserInfo buildInfo() {
+        UserInfo userInfo = new UserInfo() ;
+        BeanUtils.copyProperties(this, userInfo);
+        return userInfo ;
+    }
 }

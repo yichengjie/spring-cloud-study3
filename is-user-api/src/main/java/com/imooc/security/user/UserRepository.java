@@ -4,8 +4,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * ClassName: UserRepository
  * Description: TODO(描述)
@@ -19,5 +17,5 @@ import java.util.List;
 public interface UserRepository
         extends JpaSpecificationExecutor<User>, CrudRepository<User,Long> {
 
-    List<User> findByName(String name);
+    User findByUsername(String username);
 }
