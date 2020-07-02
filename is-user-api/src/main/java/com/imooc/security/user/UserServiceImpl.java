@@ -1,5 +1,6 @@
 package com.imooc.security.user;
 
+import com.lambdaworks.crypto.SCryptUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ public class UserServiceImpl implements UserService {
     public UserInfo create(UserInfo userInfo) {
         User user = new User() ;
         BeanUtils.copyProperties(userInfo, user) ;
+        user.setPassword(SCryptUtil.scrypt(user.getPassword(), 32768, 8, 1));
+
         userRepository.save(user) ;
         userInfo.setId(user.getId());
         return userInfo;

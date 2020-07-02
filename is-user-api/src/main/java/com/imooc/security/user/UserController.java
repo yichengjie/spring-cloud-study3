@@ -3,6 +3,7 @@ package com.imooc.security.user;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +28,7 @@ public class UserController {
     private UserService userService ;
 
     @PostMapping
-    public UserInfo create(@RequestBody UserInfo user){
+    public UserInfo create(@RequestBody @Validated UserInfo user){
 
         return userService.create(user) ;
     }

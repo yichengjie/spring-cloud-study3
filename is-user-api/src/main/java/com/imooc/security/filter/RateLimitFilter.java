@@ -2,6 +2,7 @@ package com.imooc.security.filter;
 
 import com.google.common.util.concurrent.RateLimiter;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,6 +22,7 @@ import java.io.IOException;
  * 修改记录
  * @version 产品版本信息 yyyy-mm-dd 姓名(邮箱) 修改信息
  */
+@Order(1)
 @Component
 public class RateLimitFilter extends OncePerRequestFilter {
     // 每秒一个请求的限流器

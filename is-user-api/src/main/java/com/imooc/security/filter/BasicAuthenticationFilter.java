@@ -2,8 +2,10 @@ package com.imooc.security.filter;
 
 import com.imooc.security.user.User;
 import com.imooc.security.user.UserRepository;
+import com.lambdaworks.crypto.SCryptUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,6 +25,7 @@ import java.io.IOException;
  * 修改记录
  * @version 产品版本信息 yyyy-mm-dd 姓名(邮箱) 修改信息
  */
+@Order(2)
 @Component
 public class BasicAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
@@ -39,8 +42,8 @@ public class BasicAuthenticationFilter extends OncePerRequestFilter {
             String username = items[0] ;
             String password = items[1] ;
             User user = userRepository.findByUsername(username) ;
-            if (user != null && StringUtils.equals(password,user.getPassword())){
-                req.setAttribute("user",user);
+            if (user != null && SCryptUtil.check(password, user.getPassword())){
+                 req.setAttribute("user",user);
             }
         }
         chain.doFilter(req,resp);
