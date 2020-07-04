@@ -40,6 +40,12 @@ public class UserController {
         request.getSession(true).setAttribute("user", userInfo);
     }
 
+    @GetMapping("/logout")
+    public void logout(HttpSession session){
+
+        session.invalidate();
+    }
+
     @PostMapping
     public UserInfo create(@RequestBody @Validated UserInfo user){
 
@@ -58,8 +64,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserInfo get(@PathVariable Long id, HttpServletRequest request){
-        User user = (User) request.getAttribute("user") ;
+    public UserInfo get(@PathVariable Long id, HttpSession session){
+        UserInfo user = (UserInfo)session.getAttribute("user") ;
         if (user == null || !user.getId().equals(id)){
             throw new RuntimeException("身份认证信息异常，获取用户信息失败") ;
         }

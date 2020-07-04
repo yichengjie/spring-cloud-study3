@@ -4,13 +4,13 @@ import com.imooc.security.log.AuditLog;
 import com.imooc.security.log.AuditLogRepository;
 import com.imooc.security.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 3. 审计
  * ClassName: AuditLogInterceptor
  * Description: TODO(描述)
  * Date: 2020/7/2 21:48

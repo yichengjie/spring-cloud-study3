@@ -1,6 +1,7 @@
 package com.imooc.security.user;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,4 +31,17 @@ public class UserInfo {
 
     @NotBlank(message = "密码不能为空")
     private String password ;
+
+    // 权限
+    private String permissions ;
+
+    public boolean hasPermission(String method) {
+        boolean result = false ;
+        if (StringUtils.equalsIgnoreCase("get",method)){
+            result = StringUtils.contains(permissions, "r") ;
+        }else {
+            result = StringUtils.contains(permissions, "w") ;
+        }
+        return result ;
+    }
 }

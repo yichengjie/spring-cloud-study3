@@ -2,15 +2,19 @@ package com.imooc.security.config;
 
 import com.imooc.security.filter.AclInterceptor;
 import com.imooc.security.filter.AuditLogInterceptor;
+import com.imooc.security.user.UserInfo;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 /**
@@ -45,7 +49,15 @@ public class SecurityConfig implements WebMvcConfigurer {
     public AuditorAware<String> auditorAware(){
         return () -> {
             // 自己想办法去实现获取用户
-            return Optional.of("yicj");
+            ServletRequestAttributes servletRequestAttributes =
+                    (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            HttpSession session = servletRequestAttributes.getRequest().getSession();
+            UserInfo user = (UserInfo) session.getAttribute("user");
+            String username = null ;
+            if (user != null){
+                username = user.getUsername() ;
+            }
+            return Optional.ofNullable(username);
         };
     }
 }

@@ -1,8 +1,7 @@
 package com.imooc.security.filter;
 
-import com.imooc.security.user.User;
+import com.imooc.security.user.UserInfo;
 import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -11,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 4. 授权
  * ClassName: AclInterceptor
  * Description: TODO(描述)
  * Date: 2020/7/2 22:35
@@ -28,7 +28,7 @@ public class AclInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         boolean result = true ;
         if (!ArrayUtils.contains(permitUrls, request.getRequestURI())){
-            User user = (User) request.getAttribute("user");
+            UserInfo user = (UserInfo) request.getSession().getAttribute("user");
             //1. 需不需要身份认证
             //2. 需要身份认证，身份认证过了，有没有权限
             response.setContentType("text/plain");
