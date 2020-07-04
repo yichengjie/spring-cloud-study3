@@ -17,6 +17,8 @@
     
     <modules>
         <module>is-user-api</module>
+        <module>is-order-api</module>
+        <module>is-price-api</module>
     </modules>
 
 
