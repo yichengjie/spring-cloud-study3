@@ -29,9 +29,15 @@ public class UserController {
     private UserService userService ;
 
     @GetMapping("/login")
-    public void login(@Validated UserInfo user, HttpSession session){
+    public void login(@Validated UserInfo user, HttpServletRequest request){
         UserInfo userInfo = userService.login(user) ;
-        session.setAttribute("user", userInfo);
+        //1. 注意这里getSession传递参数false
+        HttpSession session = request.getSession(false);
+        if (session != null){
+            session.invalidate();
+        }
+        //2. 注意这里getSession传递参数时true
+        request.getSession(true).setAttribute("user", userInfo);
     }
 
     @PostMapping
