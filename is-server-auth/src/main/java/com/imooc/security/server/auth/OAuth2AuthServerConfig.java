@@ -1,8 +1,11 @@
 package com.imooc.security.server.auth;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -19,12 +22,18 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
  * 修改记录
  * @version 产品版本信息 yyyy-mm-dd 姓名(邮箱) 修改信息
  */
+@Slf4j
 @Configuration
 @EnableAuthorizationServer
 public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder ;
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        log.info("======================> passwordEncoder()");
+        return new BCryptPasswordEncoder();
+    }
+    //@Autowired
+    //private PasswordEncoder passwordEncoder ;
 
     @Autowired
     private AuthenticationManager authenticationManager ;
@@ -53,7 +62,8 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
                 // 注册一个叫orderApp的应用密码是123456
                 .withClient("orderApp")
                 // 应用的密码
-                .secret(passwordEncoder.encode("123456"))
+                //secret(passwordEncoder.encode("123456"))
+                .secret(passwordEncoder().encode("123456"))
                 //orderApp可以获取到的权限的集合
                 .scopes("read", "write")
                 // token过期时间
@@ -65,7 +75,7 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
                 .and()
                 // 注册订单服务器
                 .withClient("orderService")
-                .secret(passwordEncoder.encode("123456"))
+                .secret(passwordEncoder().encode("123456"))
                 .scopes("read")
                 .accessTokenValiditySeconds(3600)
                 .resourceIds("order-server")
