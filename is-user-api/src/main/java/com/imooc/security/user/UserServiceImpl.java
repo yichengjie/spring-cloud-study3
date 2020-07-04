@@ -50,4 +50,9 @@ public class UserServiceImpl implements UserService {
     public List<UserInfo> query(String name) {
         return new ArrayList<UserInfo>();
     }
+
+    @Override
+    public UserInfo login(UserInfo user) {
+        return null;
+    }
 }

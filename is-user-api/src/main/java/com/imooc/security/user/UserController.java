@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,12 @@ public class UserController {
 
     @Autowired
     private UserService userService ;
+
+    @GetMapping("/login")
+    public void login(@Validated UserInfo user, HttpSession session){
+        UserInfo userInfo = userService.login(user) ;
+        session.setAttribute("user", userInfo);
+    }
 
     @PostMapping
     public UserInfo create(@RequestBody @Validated UserInfo user){

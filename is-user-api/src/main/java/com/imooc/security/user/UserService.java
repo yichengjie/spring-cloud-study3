@@ -25,4 +25,6 @@ public interface UserService {
     UserInfo get(Long id) ;
 
     List<UserInfo> query(String name) ;
+
+    UserInfo login(UserInfo user);
 }
