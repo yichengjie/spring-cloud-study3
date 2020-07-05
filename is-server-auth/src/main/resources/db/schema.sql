@@ -85,3 +85,15 @@ VALUES('gateway','order-server','$2a$10$Zv1iXEcI/PiX8H0./PkYEOUAs109qBdWyqgemFnP
    NULL, 3600, NULL,
    NULL,NULL
 ) ;
+
+INSERT INTO oauth_client_details(
+	client_id,resource_ids,client_secret,
+	scope,authorized_grant_types,web_server_redirect_uri,
+	authorities,access_token_validity,refresh_token_validity,
+	additional_information,autoapprove)
+VALUES('admin','order-server','$2a$10$Zv1iXEcI/PiX8H0./PkYEOUAs109qBdWyqgemFnP9LA/rxgEmmTeu',
+   'read,write', 'password,authorization_code', 'http://admin.imooc.com:8080/oauth/callback',
+   NULL, 3600, NULL,
+   NULL,NULL
+) ;
+

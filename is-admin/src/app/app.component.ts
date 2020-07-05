@@ -13,7 +13,18 @@ export class AppComponent {
   order = {id:'', productId:''}
 
   constructor(private http: HttpClient){
-
+      this.http.get('me').subscribe((data:any)=>{
+          if (data){
+              this.authenticated = true ;
+          }
+          if (!this.authenticated){//authorization_code
+              window.location.href = 'http://auth.imooc.com:9090/oauth/authorize?' +
+                  'client_id=admin&' +
+                  'redirect_uri=http://admin.imooc.com:8080/oauth/callback&' +
+                  'response_type=code&' +
+                  'state=abc';
+          }
+      }) ;
   }
 
   login(){

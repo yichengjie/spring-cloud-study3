@@ -1,18 +1,18 @@
 package com.imooc.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 /**
  * ClassName: AdminPplication
@@ -23,6 +23,7 @@ import javax.servlet.http.HttpSession;
  * 修改记录
  * @version 产品版本信息 yyyy-mm-dd 姓名(邮箱) 修改信息
  */
+@Slf4j
 @EnableZuulProxy
 @RestController
 @SpringBootApplication
@@ -33,8 +34,10 @@ public class AdminApplication {
       SpringApplication.run(AdminApplication.class, args);
     }
 
-    @PostMapping("/login")
-    public void login(@RequestBody Credentials credentials, HttpSession session) {
+    @GetMapping("/oauth/callback")
+    public void login(@RequestParam String code, String state, HttpSession session, HttpServletResponse response) throws IOException {
+        log.info("state is {}" , state);
+
         String oauthServiceUrl = "http://localhost:9070/token/oauth/token" ;
         // 配置头里面带的信息
         HttpHeaders headers = new HttpHeaders() ;
@@ -43,16 +46,24 @@ public class AdminApplication {
         // 带上令牌
         // 注意这里只能用MultiValueMap，如果使用HashMap会报错
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>() ;
-        params.add("username", credentials.getUsername());
-        params.add("password", credentials.getPassword());
-        params.add("grant_type", "password");
-        params.add("scope", "read write");
+        params.add("code", code);
+        params.add("grant_type", "authorization_code");//authorization_code
+        // 认证服务器会比较之前传的redirect_uri与这次的redirect_uri是否相同，如果不同则会报错
+        params.add("redirect_uri", "http://admin.imooc.com:8080/oauth/callback");
         // 组装请求实体
         HttpEntity<MultiValueMap<String,String>> entity = new HttpEntity<>(params, headers) ;
         // 发送http请求
-        ResponseEntity<TokenInfo> response =
+        ResponseEntity<TokenInfo> token =
           restTemplate.exchange(oauthServiceUrl, HttpMethod.POST, entity, TokenInfo.class) ;
-        session.setAttribute("token", response.getBody());
+        session.setAttribute("token", token.getBody());
+
+        response.sendRedirect("/");
+    }
+
+    @GetMapping("/me")
+    public TokenInfo me(HttpSession session){
+        TokenInfo info = (TokenInfo) session.getAttribute("token");
+        return info ;
     }
 
     @GetMapping("/logout")
