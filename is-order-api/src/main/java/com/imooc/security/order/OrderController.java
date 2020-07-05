@@ -33,6 +33,9 @@ public class OrderController {
     public OrderInfo getInfo(@PathVariable Long id, @RequestHeader String username){
         log.info("======> username is : {}" , username );
         log.info("orderId : {}", id);
-        return new OrderInfo() ;
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setId(id);
+        orderInfo.setProductId(id * 5);
+        return orderInfo ;
     }
 }

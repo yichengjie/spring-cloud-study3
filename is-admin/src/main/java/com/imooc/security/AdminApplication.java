@@ -2,6 +2,7 @@ package com.imooc.security;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -21,8 +22,9 @@ import javax.servlet.http.HttpSession;
  * 修改记录
  * @version 产品版本信息 yyyy-mm-dd 姓名(邮箱) 修改信息
  */
-@SpringBootApplication
+@EnableZuulProxy
 @RestController
+@SpringBootApplication
 public class AdminApplication {
     private RestTemplate restTemplate = new RestTemplate() ;
 

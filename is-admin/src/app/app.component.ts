@@ -9,7 +9,8 @@ import {HttpClient} from "@angular/common/http";
 export class AppComponent {
   title = 'imooc microservice security ';
   authenticated = false;
-  credentials = {username:"jojo",password:"123"} ;
+  credentials = {username:'jojo',password:'123'} ;
+  order = {id:'', productId:''}
 
   constructor(private http: HttpClient){
 
@@ -21,6 +22,13 @@ export class AppComponent {
        this.authenticated = true ;
     },()=>{
         alert('login fail')
+    }) ;
+  }
+  getOrder(){
+    this.http.get('api/order/orders/1').subscribe( (data:any)  =>{
+      this.order = data ;
+    },()=>{
+       alert('get order fail') ;
     }) ;
   }
 }
