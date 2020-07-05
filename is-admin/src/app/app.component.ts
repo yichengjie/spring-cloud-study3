@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,20 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'imooc microservice security';
+  title = 'imooc microservice security ';
+  authenticated = false;
+  credentials = {username:"jojo",password:"123"} ;
+
+  constructor(private http: HttpClient){
+
+  }
+
+  login(){
+    console.info('this.credentials ' ,this.credentials)
+    this.http.post('login', this.credentials).subscribe(()=>{
+       this.authenticated = true ;
+    },()=>{
+        alert('login fail')
+    }) ;
+  }
 }
