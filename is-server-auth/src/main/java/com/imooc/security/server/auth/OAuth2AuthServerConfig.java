@@ -12,6 +12,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+
+import javax.sql.DataSource;
 
 /**
  * ClassName: OAuth2AuthServerConfig
@@ -27,17 +31,40 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 @EnableAuthorizationServer
 public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        log.info("======================> passwordEncoder()");
-        return new BCryptPasswordEncoder();
-    }
-    //@Autowired
-    //private PasswordEncoder passwordEncoder ;
 
     @Autowired
     private AuthenticationManager authenticationManager ;
 
+    @Autowired
+    private DataSource dataSource ;
+
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder() ;
+    }
+
+    @Bean
+    public TokenStore tokenStore (){
+        return new JdbcTokenStore(dataSource) ;
+    }
+
+    // 1. 配置客户端应用的详细信息，让认证服务器知道有哪些客户端应用会来请求令牌
+    // 注册orderApp和orderService应用，现在这两个都是授权服务器可以认的应用了
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        // 直接去数据源里面查询
+        clients.jdbc(dataSource);
+    }
+
+    //2. 添加配置让认证服务器知道哪些用户可以访问认证服务器
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+
+        endpoints
+                .tokenStore(tokenStore()) // 配置token存放位置，默认存放在内存中
+                .authenticationManager(authenticationManager) ;
+    }
 
     //3. 谁能找我验token的合法性
     @Override
@@ -45,43 +72,5 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
         // isAuthenticated() 是权限表达式，表示如果你来验证token的请求，一定要是经过身份认证的
         // 这里的经过身份认证就是说你要带着用户名和密码，例如：orderApp-123456, 或则orderService-123456
         security.checkTokenAccess("isAuthenticated()") ;
-    }
-
-    //2. 添加配置让认证服务器知道哪些用户可以访问认证服务器
-    @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-
-        endpoints.authenticationManager(authenticationManager) ;
-    }
-
-    // 1. 配置客户端应用的详细信息，让认证服务器知道有哪些客户端应用会来请求令牌
-    // 注册orderApp和orderService应用，现在这两个都是授权服务器可以认的应用了
-    @Override
-    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory()
-                // 注册一个叫orderApp的应用密码是123456
-                .withClient("orderApp")
-                // 应用的密码
-                //secret(passwordEncoder.encode("123456"))
-                .secret(passwordEncoder().encode("123456"))
-                //orderApp可以获取到的权限的集合
-                .scopes("read", "write")
-                // token过期时间
-                .accessTokenValiditySeconds(3600)
-                // 签发token可以访问哪些资源服务器
-                .resourceIds("order-server")
-                // 授权类型，总共有四种模式
-                .authorizedGrantTypes("password")
-                .and()
-                // 注册订单服务器
-                .withClient("orderService")
-                .secret(passwordEncoder().encode("123456"))
-                .scopes("read")
-                .accessTokenValiditySeconds(3600)
-                .resourceIds("order-server")
-                .authorizedGrantTypes("password")
-
-
-        ;
     }
 }
