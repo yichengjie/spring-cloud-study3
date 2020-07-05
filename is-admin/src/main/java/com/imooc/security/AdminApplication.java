@@ -6,6 +6,7 @@ import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,6 @@ public class AdminApplication {
 
     @PostMapping("/login")
     public void login(@RequestBody Credentials credentials, HttpSession session) {
-
         String oauthServiceUrl = "http://localhost:9070/token/oauth/token" ;
         // 配置头里面带的信息
         HttpHeaders headers = new HttpHeaders() ;
@@ -55,4 +55,8 @@ public class AdminApplication {
         session.setAttribute("token", response.getBody());
     }
 
+    @GetMapping("/logout")
+    public void logout(HttpSession session){
+        session.invalidate();
+    }
 }

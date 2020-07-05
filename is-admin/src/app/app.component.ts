@@ -17,7 +17,6 @@ export class AppComponent {
   }
 
   login(){
-    console.info('this.credentials ' ,this.credentials)
     this.http.post('login', this.credentials).subscribe(()=>{
        this.authenticated = true ;
     },()=>{
@@ -30,5 +29,12 @@ export class AppComponent {
     },()=>{
        alert('get order fail') ;
     }) ;
+  }
+  logout(){
+    this.http.get("logout").subscribe(()=>{
+       this.authenticated = false ;
+    },()=>{
+       alert('logout fail')
+    })
   }
 }
