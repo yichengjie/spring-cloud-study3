@@ -2,10 +2,7 @@ package com.imooc.security.order;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -31,5 +28,11 @@ public class OrderController {
 //        PriceInfo priceInfo = restTemplate.getForObject(url, PriceInfo.class) ;
 //        log.info("price is " + priceInfo.getPrice());
         return info ;
+    }
+
+    @GetMapping("/{id}")
+    public OrderInfo getInfo(@PathVariable Long id){
+        log.info("orderId : {}", id);
+        return new OrderInfo() ;
     }
 }
