@@ -26,14 +26,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class OAuth2WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsServiceImpl ;
+    @Qualifier("userDetailsServiceImpl")
+    private UserDetailsService userDetailsService ;
 
 
     // 这里仅仅是配置如何组装AuthenticationManager，并没有将AuthenticationManager暴露为bean
     // 构建
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsServiceImpl) ;
+        auth.userDetailsService(userDetailsService) ;
     }
 
 

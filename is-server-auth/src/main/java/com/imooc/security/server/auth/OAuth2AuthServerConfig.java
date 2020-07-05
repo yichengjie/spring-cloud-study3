@@ -28,7 +28,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         log.info("======================> passwordEncoder()");
         return new BCryptPasswordEncoder();
     }

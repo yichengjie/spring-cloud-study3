@@ -1,5 +1,6 @@
 package com.imooc.security.order;
 
+import com.imooc.security.order.server.resource.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,8 @@ public class OrderController {
     private RestTemplate restTemplate = new RestTemplate();
 
     @PostMapping
-    public OrderInfo create(@RequestBody OrderInfo info, @AuthenticationPrincipal String username){
-        log.info("======> username is : {}" , username );
+    public OrderInfo create(@RequestBody OrderInfo info, @AuthenticationPrincipal(expression = "#this.id") Long id){
+        log.info("======> user id is : {}" , id );
 //        String url = "http://localhost:9060/prices/" + info.getProductId() ;
 //        PriceInfo priceInfo = restTemplate.getForObject(url, PriceInfo.class) ;
 //        log.info("price is " + priceInfo.getPrice());
@@ -31,7 +32,8 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public OrderInfo getInfo(@PathVariable Long id){
+    public OrderInfo getInfo(@PathVariable Long id, @AuthenticationPrincipal User user){
+        log.info("======> user is : {}" , user );
         log.info("orderId : {}", id);
         return new OrderInfo() ;
     }
