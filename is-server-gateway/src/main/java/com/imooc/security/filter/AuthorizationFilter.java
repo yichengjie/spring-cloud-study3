@@ -75,7 +75,8 @@ public class AuthorizationFilter extends ZuulFilter {
      * @return
      */
     private boolean hasPermission(TokenInfo tokenInfo, HttpServletRequest request) {
-        return RandomUtils.nextInt() %2 == 0 ;
+        //return RandomUtils.nextInt() %2 == 0 ;
+        return true ;
     }
 
     private void handleError(int status, RequestContext requestContext) {
