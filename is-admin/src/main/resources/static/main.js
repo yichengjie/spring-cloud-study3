@@ -45,16 +45,15 @@ class AppComponent {
         this.authenticated = false;
         this.credentials = { username: 'jojo', password: '123' };
         this.order = { id: '', productId: '' };
-        this.http.get('me').subscribe((data) => {
+        this.http.get('me').subscribe(data => {
             if (data) {
                 this.authenticated = true;
             }
-            if (!this.authenticated) { //authorization_code
+            if (!this.authenticated) {
                 window.location.href = 'http://auth.imooc.com:9090/oauth/authorize?' +
                     'client_id=admin&' +
                     'redirect_uri=http://admin.imooc.com:8080/oauth/callback&' +
-                    'response_type=code&' +
-                    'state=abc';
+                    'response_type=code';
             }
         });
     }
