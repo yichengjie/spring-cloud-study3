@@ -1,5 +1,8 @@
 server:
   port: 9090
+  servlet:
+    session:
+      timeout: 2592000  #session有效期
 
 spring:
   application:
@@ -9,3 +12,4 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+

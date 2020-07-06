@@ -38,7 +38,7 @@ public class AdminApplication {
     public void login(@RequestParam String code, String state, HttpSession session, HttpServletResponse response) throws IOException {
         log.info("state is {}" , state);
 
-        String oauthServiceUrl = "http://localhost:9070/token/oauth/token" ;
+        String oauthServiceUrl = "http://gateway.imooc.com:9070/token/oauth/token" ;
         // 配置头里面带的信息
         HttpHeaders headers = new HttpHeaders() ;
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -55,7 +55,7 @@ public class AdminApplication {
         // 发送http请求
         ResponseEntity<TokenInfo> token =
           restTemplate.exchange(oauthServiceUrl, HttpMethod.POST, entity, TokenInfo.class) ;
-        session.setAttribute("token", token.getBody());
+        session.setAttribute("token", token.getBody().init());
 
         response.sendRedirect("/");
     }

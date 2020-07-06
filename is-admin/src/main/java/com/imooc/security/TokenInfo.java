@@ -2,6 +2,8 @@ package com.imooc.security;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 /**
  * ClassName: TokenInfo
  * Description: TODO(描述)
@@ -13,8 +15,20 @@ import lombok.Data;
  */
 @Data
 public class TokenInfo {
-  private String access_token ;
-  private String token_type ;
-  private String expires_in ;
-  private String scope ;
+    private String access_token;
+    private String refresh_token ;
+    private String token_type;
+    private Long expires_in;
+    private String scope;
+    // 过期时间
+    private LocalDateTime expireTime ;
+
+    public TokenInfo init() {
+        this.expireTime = LocalDateTime.now().plusSeconds(expires_in - 3);
+        return this;
+    }
+
+    public boolean isExpired() {
+        return this.expireTime.isBefore(LocalDateTime.now());
+    }
 }
