@@ -10,6 +10,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -55,9 +56,24 @@ public class AdminApplication {
         // 发送http请求
         ResponseEntity<TokenInfo> token =
           restTemplate.exchange(oauthServiceUrl, HttpMethod.POST, entity, TokenInfo.class) ;
-        session.setAttribute("token", token.getBody().init());
-
+        //session.setAttribute("token", token.getBody().init());
+        addTokenCookies(token.getBody(), response) ;
         response.sendRedirect("/");
+    }
+
+
+    public static void addTokenCookies(TokenInfo info, HttpServletResponse response){
+        Cookie accessTokenCookie = new Cookie("imooc_access_token", info.getAccess_token()) ;
+        accessTokenCookie.setMaxAge(info.getExpires_in().intValue());
+        accessTokenCookie.setDomain("imooc.com");
+        accessTokenCookie.setPath("/");
+        response.addCookie(accessTokenCookie);
+
+        Cookie refreshTokenCookie = new Cookie("imooc_refresh_token", info.getRefresh_token()) ;
+        refreshTokenCookie.setMaxAge(259200);
+        refreshTokenCookie.setDomain("imooc.com");
+        refreshTokenCookie.setPath("/");
+        response.addCookie(refreshTokenCookie);
     }
 
     @GetMapping("/me")

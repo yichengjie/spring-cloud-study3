@@ -51,7 +51,6 @@ public class AuthorizationFilter extends ZuulFilter {
                     log.info("audit log update fail 401");
                     handleError(403, requestContext) ;
                 }
-
                 // 添加信息,这样在微服务那边就能在header中取到这个值
                 requestContext.addZuulRequestHeader("username", tokenInfo.getUser_name());
 

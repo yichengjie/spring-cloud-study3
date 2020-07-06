@@ -45,7 +45,7 @@ class AppComponent {
         this.authenticated = false;
         this.credentials = { username: 'jojo', password: '123' };
         this.order = { id: '', productId: '' };
-        this.http.get('me').subscribe(data => {
+        this.http.get('api/user/me').subscribe(data => {
             if (data) {
                 this.authenticated = true;
             }
