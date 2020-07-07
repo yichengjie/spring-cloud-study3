@@ -27,11 +27,15 @@ public class GateWaySecurityConfig extends ResourceServerConfigurerAdapter {
     @Autowired
     private GatewayAccessDeniedHandler gatewayAccessDeniedHandler ;
 
+    @Autowired
+    private GatewayAuthenticationEntryPoint gatewayAuthenticationEntryPoint ;
+
     // 添加表达式处理器
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         resources
-                .accessDeniedHandler(gatewayAccessDeniedHandler) // 处理403访问被拒绝的处理器
+                .authenticationEntryPoint(gatewayAuthenticationEntryPoint)// 401认证失败处理器
+                .accessDeniedHandler(gatewayAccessDeniedHandler) // 403访问被拒绝的处理器
                 .expressionHandler(gatewayWebSecurityExpressionHandler) ;
     }
 
