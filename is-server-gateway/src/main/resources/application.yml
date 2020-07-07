@@ -43,6 +43,7 @@ spring:
     generate-ddl: true
     show-sql: true
 
+# 网关验证token合法性配置
 security:
   oauth2:
     resource:
