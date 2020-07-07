@@ -24,7 +24,8 @@ public class PermissionServiceImpl implements PermissionService {
     public boolean hasPermission(HttpServletRequest request, Authentication authentication) {
         // 1. 调用远程服务查询权限信息（可以在服务器启动的时候加载好，这里获取）
         // 2. 根据1中的权限信息进行判断
-        log.info("authentication : {}", ReflectionToStringBuilder.toString(authentication));
+        log.info("===> url: {}", request.getRequestURI() );
+        log.info("===> authentication : {}", ReflectionToStringBuilder.toString(authentication));
         return RandomUtils.nextInt() %2 ==0;
     }
 }
