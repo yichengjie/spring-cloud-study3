@@ -61,7 +61,10 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
         return new JwtTokenStore(jwtTokenEnhancer()) ;
     }
 
-    private JwtAccessTokenConverter jwtTokenEnhancer() {
+    // 注意这里必须是public而且是@Bean否则资源服务会报404
+    // 这里如果不申请为spring容器管理的bean则TokenEndpoint是不会暴漏/oauth/token端点
+    @Bean
+    public JwtAccessTokenConverter jwtTokenEnhancer() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter() ;
         //converter.setSigningKey("123456");
         ClassPathResource resource = new ClassPathResource("jojo.key") ;
