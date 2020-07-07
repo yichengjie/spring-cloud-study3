@@ -1,6 +1,7 @@
 package com.imooc.security;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -30,6 +31,8 @@ public class GatewayAuditLogFilter extends OncePerRequestFilter {
         String username = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal() ;
         log.info("====>1. add log for {}", username);
         filterChain.doFilter(request,response);
-        log.info("====>3. update log to success");
+        if (StringUtils.isBlank((String)request.getAttribute("logUpdated"))){
+            log.info("====>3. update log to success");
+        }
     }
 }
