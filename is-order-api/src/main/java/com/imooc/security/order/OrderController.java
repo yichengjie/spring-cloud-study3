@@ -1,7 +1,9 @@
 package com.imooc.security.order;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,14 +21,16 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/orders")
 public class OrderController {
 
-    private RestTemplate restTemplate = new RestTemplate();
+    //private RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private OAuth2RestTemplate restTemplate ;
 
     @PostMapping
     public OrderInfo create(@RequestBody OrderInfo info, @AuthenticationPrincipal String username){
         log.info("======> username is : {}" , username );
-//        String url = "http://localhost:9060/prices/" + info.getProductId() ;
-//        PriceInfo priceInfo = restTemplate.getForObject(url, PriceInfo.class) ;
-//        log.info("price is " + priceInfo.getPrice());
+        String url = "http://localhost:9060/prices/" + info.getProductId() ;
+        PriceInfo priceInfo = restTemplate.getForObject(url, PriceInfo.class) ;
+        log.info("price is " + priceInfo.getPrice());
         return info ;
     }
 
