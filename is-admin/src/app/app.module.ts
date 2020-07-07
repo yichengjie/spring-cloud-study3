@@ -6,6 +6,7 @@ import {HttpClientModule} from '@angular/common/http';
 
 import {RefreshInterceptor} from './app.interceptor';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {CookieService} from "ngx-cookie-service";
 
 import {AppComponent} from './app.component';
 
@@ -20,6 +21,7 @@ import {AppComponent} from './app.component';
         HttpClientModule
     ],
     providers: [
+        CookieService,
         {provide: HTTP_INTERCEPTORS, useClass: RefreshInterceptor, multi: true},
     ],
     bootstrap: [AppComponent]

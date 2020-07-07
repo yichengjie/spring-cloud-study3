@@ -44,7 +44,6 @@ public class MeFilter extends ZuulFilter {
         HttpServletRequest request = requestContext.getRequest();
         String username = requestContext.getZuulRequestHeaders().get("username");
         if (StringUtils.isNotBlank(username)){
-            //{"username":""}
             requestContext.setResponseBody("{\"username\":\""+username+"\"}");
         }
         requestContext.setSendZuulResponse(false);
