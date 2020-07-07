@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,7 +16,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 
 import javax.sql.DataSource;
@@ -54,7 +57,17 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
 
     @Bean
     public TokenStore tokenStore (){
-        return new JdbcTokenStore(dataSource) ;
+        //return new JdbcTokenStore(dataSource) ;
+        return new JwtTokenStore(jwtTokenEnhancer()) ;
+    }
+
+    private JwtAccessTokenConverter jwtTokenEnhancer() {
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter() ;
+        //converter.setSigningKey("123456");
+        ClassPathResource resource = new ClassPathResource("jojo.key") ;
+        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(resource, "123456".toCharArray());
+        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("jojo"));
+        return converter ;
     }
 
     // 1. 配置客户端应用的详细信息，让认证服务器知道有哪些客户端应用会来请求令牌
@@ -72,6 +85,7 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
         endpoints
                 .userDetailsService(userDetailsService) // 专门指定userDetailsService给refresh_token这个服务使用
                 .tokenStore(tokenStore()) // 配置token存放位置，默认存放在内存中
+                .tokenEnhancer(jwtTokenEnhancer())
                 .authenticationManager(authenticationManager) ;
     }
 
@@ -80,6 +94,7 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         // isAuthenticated() 是权限表达式，表示如果你来验证token的请求，一定要是经过身份认证的
         // 这里的经过身份认证就是说你要带着用户名和密码，例如：orderApp-123456, 或则orderService-123456
-        security.checkTokenAccess("isAuthenticated()") ;
+        security.tokenKeyAccess("isAuthenticated()")
+                .checkTokenAccess("isAuthenticated()") ;
     }
 }
