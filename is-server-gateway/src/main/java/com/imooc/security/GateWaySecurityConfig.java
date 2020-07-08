@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
 /**
  * ClassName: GateWaySecurityConfig
@@ -42,6 +43,7 @@ public class GateWaySecurityConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
+            .addFilterBefore(new GatewayRateLimitFilter(), SecurityContextPersistenceFilter.class)
             .addFilterBefore(new GatewayAuditLogFilter(), ExceptionTranslationFilter.class)
             .authorizeRequests()
             .antMatchers("/token/**").permitAll()
