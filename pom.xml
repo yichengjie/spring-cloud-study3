@@ -22,6 +22,7 @@
         <module>is-server-auth</module>
         <module>is-server-gateway</module>
         <module>is-admin</module>
+        <module>hello-world</module>
     </modules>
 
 
